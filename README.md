@@ -1,2 +1,0 @@
-# CodeTemplate
-CodeTemplate for ACM
