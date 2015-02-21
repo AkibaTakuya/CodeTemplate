@@ -1,5 +1,5 @@
 /*
- *	Name : standard.h 纸农の标准库
+ *	Name : ChouUn's Standard Library 纸农の标准库
  *	Copyright : www.fateud.com
  *	Email : ChouUnSoft@gmail.com
  *	Description : None
@@ -87,8 +87,15 @@ using namespace std;
 			i=_s;\
 			i!=_t;\
 			i=i+_d)
-#define REP(i,n) 	for(__typeof(n) i=0;i<(n);i++)
-#define RREP(i,n)	for(__typeof(n) i=(n)-1;i>=0;i--)
+#define REP(i,n)\
+	for(int _t = n,\
+			i=0;\
+			i<_t;\
+			i++)
+#define RREP(i,n)\
+	for(int i=n-1;\
+			i>=0;\
+			i--)
 #define TRV(i,n)	for(tp(n) i=(n).op;i!=(n).ed;i++)
 #define RTRV(i,n)	for(rtp(n) i=(n).rop;i!=(n).red;i++)
 

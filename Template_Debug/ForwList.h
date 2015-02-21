@@ -93,11 +93,11 @@ class _ForwList_iterator
 // 成员定义：
 public	:
 	friend class ForwList<_Tp>;
-	typedef _ForwList_iterator<_Tp>	_Self;
-	typedef _ForwList_node<_Tp>		_Node;
-	typedef _Tp						value_type;
-	typedef _Tp *					pointer;
-	typedef _Tp &					reference;
+	typedef _ForwList_iterator<_Tp>		_Self;
+	typedef _ForwList_node<_Tp>			_Node;
+	typedef _Tp							value_type;
+	typedef _Tp *						pointer;
+	typedef _Tp &						reference;
 
 // 成员变量：
 private	:
@@ -198,12 +198,8 @@ public	:
 	{ return _node->_next._data; }
 
 // 修改符：
-public	: //
-	inline void
-	push_front(value_type __data)
-	{ this->insert(root(), __data); }
-
-	inline void
+public	:
+	void
 	insert(iterator __pos, const value_type& __data)
 	{
 		_Node* __tmp = new _Node(__data, __pos._node->_next);
@@ -218,6 +214,10 @@ public	: //
 		__pos._node->_next = __tmp;
 		return true;
 	}
+
+	inline void
+	push_front(value_type __data)
+	{ this->insert(root(), __data); }
 
 	void
 	clear()

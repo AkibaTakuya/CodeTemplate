@@ -26,7 +26,7 @@
  *	元素访问：
  *	at(size_t x, size_t y) : _Tp &
  *		矩阵中 [x, y] 处元素的引用
- *	at(size_t x, size_t y) const : const _Tp
+ *	at(size_t x, size_t y) const : const _Tp &
  *		矩阵中 [x, y] 处元素的值
  *
  *	修改符：
@@ -65,7 +65,7 @@ public	:
 	inline size_t height() const { return _h; }
 	inline size_t width() const { return _w; }
 	inline reference at(size_t x, size_t y) { return _data[x][y]; }
-	inline const value_type at(size_t x, size_t y) const { return _data[x][y]; }
+	inline const reference at(size_t x, size_t y) const { return _data[x][y]; }
 	inline void clear() { CLEAR(_data, 0x00); }
 	_Self & operator += (const _Self other) { REP(i,_h) REP(j,_w) at(i,j) += other.at(i,j); return (*this); }
 	_Self & operator *= (const _Self other) { _Self __res(_h, other._w); REP(i,__res._h) REP(j,__res._w) REP(k,_w) __res.at(i,j) += (*this).at(i,k) * other.at(k,j); *this = __res; return (*this); }

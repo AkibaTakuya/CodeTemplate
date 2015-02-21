@@ -26,7 +26,7 @@
  *	元素访问：
  *	at(size_t x, size_t y) : _Tp &
  *		矩阵中 [x, y] 处元素的引用
- *	at(size_t x, size_t y) const : const _Tp
+ *	at(size_t x, size_t y) const : const _Tp &
  *		矩阵中 [x, y] 处元素的值
  *
  *	修改符：
@@ -99,7 +99,7 @@ public	:
 	at(size_t x, size_t y)
 	{ return _data[x][y]; }
 
-	inline const value_type
+	inline const reference
 	at(size_t x, size_t y) const
 	{ return _data[x][y]; }
 
