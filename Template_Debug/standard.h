@@ -88,7 +88,7 @@ using namespace std;
 			i!=_t;\
 			i=i+_d)
 #define REP(i,n)\
-	for(int _t = n,\
+	for(int _t=n,\
 			i=0;\
 			i<_t;\
 			i++)

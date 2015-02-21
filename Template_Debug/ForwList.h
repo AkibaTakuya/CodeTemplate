@@ -31,11 +31,11 @@
  *		起始元素的值
  *
  *	修改符:
- *	insert(iterator pos, const value_type& data) ： void
+ *	insert(iterator pos, const _Tp & data) ： void
  *		在 pos 后插入元素 data
  *	erase(iterator pos) : bool
  *		删除 pos 后的元素，返回是否成功
- *	push_front(value_type data) : void
+ *	push_front(_Tp data) : void
  *		在头部插入元素 data
  *	clear() : void
  *		清除所有非根部元素

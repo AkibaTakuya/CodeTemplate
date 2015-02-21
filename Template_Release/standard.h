@@ -70,7 +70,7 @@ using namespace std;
 #define PRINT(x)	cout << #x << " = " << x << endl
 #define CLEAR(x,c)	memset(x,c,sizeof(x))
 #define FOR(i,m,n)	for(int _s=(m),_t=(n)+1-2*((n)<(m)),_d=1-2*((n)<(m)),i=_s;i!=_t;i=i+_d)
-#define REP(i,n)	for(int _t = n,i=0;i<_t;i++)
+#define REP(i,n)	for(int _t=n,i=0;i<_t;i++)
 #define RREP(i,n)	for(int i=n-1;i>=0;i--)
 #define TRV(i,n)	for(tp(n) i=(n).op;i!=(n).ed;i++)
 #define RTRV(i,n)	for(rtp(n) i=(n).rop;i!=(n).red;i++)
