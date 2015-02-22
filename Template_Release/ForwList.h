@@ -65,8 +65,7 @@ public	:
 	typedef _ForwList_node<_Tp>		_Self;
 	typedef _Tp						value_type;
 private	:
-    value_type _data;
-    _Self* _next;
+	value_type _data; _Self* _next;
 public	:
 	_ForwList_node() : _data(), _next() { }
 	explicit _ForwList_node(value_type __data) : _data(__data), _next() { }

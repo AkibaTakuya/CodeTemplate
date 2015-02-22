@@ -69,8 +69,8 @@ public	:
 
 // 成员变量：
 private	:
-    value_type _data;
-    _Self* _next;
+	value_type _data;
+	_Self* _next;
 
 // 成员函数：
 public	:
