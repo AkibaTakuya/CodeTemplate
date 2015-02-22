@@ -120,7 +120,7 @@ public	:
 
 	pointer
 	operator -> () const
-	{ return __addressof(_node->_data); }
+	{ return &(_node->_data); }
 
 	_Self &
 	operator ++ ()

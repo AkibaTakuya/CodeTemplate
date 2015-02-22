@@ -87,7 +87,7 @@ public	:
 	_ForwList_iterator() : _node() { }
 	explicit _ForwList_iterator(_Node* __target) : _node(__target) { }
 	reference operator * () const { return _node->_data; }
-	pointer operator -> () const { return __addressof(_node->_data); }
+	pointer operator -> () const { return &(_node->_data); }
 	_Self & operator ++ () { _node = _node->_next; return *this; }
 	_Self operator ++ (int) { _Self __res(*this); _node = _node->_next; return __res; }
 	bool operator == (const _Self& other) const { return _node == other._node; }

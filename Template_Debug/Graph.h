@@ -4,28 +4,61 @@
  *	
  *	模板参数：
  *	Graph <_Tp>
- *		限定元素的类型 _Tp
+ *		限定权值的类型 _Tp
  *
  *	成员函数：
- *	null
+ *	Graph()
+ *		初始一个空的图
+ *	Graph(size_t _Sz)
+ *		初始一个 _Sz 个顶点的图
+ *	~Graph()
+ *		清除图中所有元素
  *	
  *	迭代器：
- *	null
- *	
+ *	size_t v;
+ *		指向顶点 v
+ *	_Tp w;
+ *		权值为 w
+ *
  *	职能：
- *	null
+ *	size() const : const size_t
+ *		返回顶点的数量
+ *	resize(size_t Sz) : void
+ *		定义顶点的数量
  *	
  *	元素访问：
- *	null
+ *	operator [] (size_t n) : ForwList<..> &
+ *		返回第 n 个顶点的前向链表的引用
+ *	operator [] (size_t n) const : const ForwList<..> &
+ *		返回第 n 个顶点的前向链表的值
+ *	at (size_t n) ： ForwList<..> &
+ *		返回第 n 个顶点的前向链表的引用
+ *	at (size_t n) const ： const ForwList<..> &
+ *		返回第 n 个顶点的前向链表的值
  *	
  *	修改符：
- *	null
- *	
+ *	add_edge(size_t u, size_t v, _Tp w) : void
+ *		添加一条 u 指向 v 权值为 w 的有向边
+ *	add_edge_double(size_t u, size_t v, _Tp w) : void
+ *		添加一条 u 指向 v 权值为 w 的无向边
+ *	add_edge_couple(size_t u, size_t v, _Tp w) : void
+ *		添加一条 u 指向 v 权值为 w 带反向弧的有向边
+ *	push_back(size_t n) : void
+ *		插入 n 个顶点
+ *	pop_back(size_t n) : void
+ *		删除 n 个顶点
+ *	flush(size_t n) : void
+ *		清除顶点 n 出发的所有边
+ *	flush() : void
+ *		清除图中所有边
+ *	clear() : void
+ *		清除图中所有顶点和边
+ *
  *	操作符：
- *	null
- *	
- *	运算符重载：
- *	null
+ *	Dijkstra(size_t s, _Tp* dist, bool* used = 0) : void
+ *		计算源点为 s 时该图的单源最短路，
+ *		used 数组表示某个点是否可用，
+ *		结果反馈在 dist 数组，0 表示断路。
  *
  */
 
@@ -106,16 +139,25 @@ public	:
 	explicit
 	Graph(size_t _Sz)
 	: _data( vector<pointer>(_Sz) )
-	{ REP(i,_Sz) _data[i] = new value_type(); }
+	{ REP(i, _Sz) _data[i] = new value_type(); }
 
 	~Graph()
-	{ RREP(i,sz) { delete _data[i]; } _data.clear(); }
+	{ clear(); }
 
 // 职能：
 public	:
-	inline const size_t
+	const size_t
 	size() const
 	{ return _data.size(); }
+
+	void
+	resize(size_t __Sz)
+	{
+		if (__Sz > size())
+			push_back(__Sz - size());
+		else if (__Sz < size())
+			pop_back(size() - __Sz);
+	}
 
 // 元素访问：
 public	: 
@@ -148,26 +190,48 @@ public	:
 
 	inline void
 	add_edge_double(size_t __u, size_t __v, _Tp __w)
-	{ _add_elem(__u, __v, __w); _add_elem(__v, __u, __w); }
+	{
+		_add_elem(__u, __v, __w);
+		_add_elem(__v, __u, __w);
+	}
 
 	inline void
 	add_edge_couple(size_t __u, size_t __v, _Tp __w)
-	{ _add_elem(__u, __v, __w); _add_elem(__v, __u, 0); }
+	{
+		_add_elem(__u, __v, __w);
+		_add_elem(__v, __u, 0);
+	}
 
-// 操作符：
-public	: 
-	inline void
-	clear(size_t __n)
+	void
+	push_back(size_t __n)
+	{ REP(i, __n) _data.inb(new value_type()); }
+
+	void
+	pop_back(size_t __n)
+	{ REP(i, __n) _data.deb(); }
+
+	void
+	flush(size_t __n)
 	{ _data[__n]->clear(); }
 
 	void
-	clear()
+	flush()
 	{ REP(i,sz) _data[i]->clear(); }
 
+	void
+	clear()
+	{
+		RREP(i,sz) delete _data[i];
+		_data.clear();
+	}
+
+// 操作符：
+public	:
 	void
 	Dijkstra(size_t __source, _Tp* __dist, bool* __used = 0)
 	{
 		bool __haveused = !!__used;
+		memset(__dist, 0, size() * sizeof(_Tp));
 		if (!__haveused)
 		{
 			__used = new bool[size()];
@@ -178,21 +242,20 @@ public	:
 		__dist[__source] = 0;
 		__used[__source] = 1;
 
-		typedef pair<_Tp,size_t> mytype;
+		typedef pair<_Tp, size_t> mytype;
 		priority_queue< mytype, vector<mytype>, greater<mytype> > __queue;
-		TRV(i,at(__source)) __queue.push(mp(i->w, i->v));
+		TRV(i, at(__source)) __queue.push(mp(i->w, i->v));
 
 		while (!__queue.empty())
 		{
 			_Tp __w = __queue.top().X;
 			size_t __v = __queue.top().Y;
 			__queue.pop();
-
 			if (__used[__v]) continue;
-			__used[__v] = true;
-			__dist[__v] = __w;
 
-			TRV(i,at(__v)) __queue.push(mp(__dist[__v]+i->w,i->v));
+			__dist[__v] = __w;
+			__used[__v] = true;
+			TRV(i, at(__v)) __queue.push(mp(__dist[__v] + i->w, i->v));
 		}
 		if (!__haveused) delete []__used;
 	}

@@ -4,6 +4,7 @@
  *	Email : ChouUnSoft@gmail.com
  *	Description : None
  */
+
 #ifndef _TEMPLATE_STANDARD
 #define _TEMPLATE_STANDARD 1
 
