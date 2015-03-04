@@ -36,8 +36,8 @@
 #endif	/* _TEMPLATE_STANDARD */
 
 template <typename _Tp>
-void _SegmTree_init(_Tp& __elem, size_t __n)
-{ __elem = _Tp(); }
+_Tp _SegmTree_init(size_t __n)
+{ return _Tp(); }
 
 template <typename _Tp>
 class SegmTree 
@@ -58,14 +58,14 @@ private	:
 	size_t _max_size;
 	size_t _size;
 	value_type* _data;
-	void (*_func_init)(reference, size_t);
+	value_type (*_func_init)(size_t);
 
 public	:
 
 // ³ÉÔ±º¯Êý£º
 public	: 
 	explicit
-	SegmTree(size_t _Sz, void (*__func_init)(reference, size_t) = _SegmTree_init<value_type>)
+	SegmTree(size_t _Sz, value_type (*__func_init)(size_t) = _SegmTree_init<value_type>)
 	: _max_size(), _size(_Sz), _data(),
 	  _func_init(__func_init)
 	{
@@ -116,7 +116,7 @@ private	:
 	_build(size_t __id, size_t l, size_t r)
 	{
 //		printf("id = %d, l = %d, r = %d\n", __id, l, r);
-		if (l == r) { _func_init(_data[__id], l); return; }
+		if (l == r) { _data[__id] = _func_init(l); return; }
 		size_t mid = (l + r) >> 1;
 		_build(lson(__id));
 		_build(rson(__id));

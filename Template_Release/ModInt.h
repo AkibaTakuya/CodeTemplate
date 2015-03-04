@@ -22,6 +22,7 @@
  *
  *	运算符重载：
  *		支持普通操作：+, +=, -, -=, *, *=, =
+ *		支持乘方操作：^
  *		支持读取数据：*
  *
  */
@@ -56,6 +57,7 @@ public	:
 	_Self operator + (const _Self other) const { return ModInt(*this) += other; }
 	_Self operator - (const _Self other) const { return ModInt(*this) -= other; }
 	_Self operator * (const _Self other) const { return ModInt(*this) *= other; }
+	_Self operator ^ (value_type p) { _Self ret = 1, tmp = *this; while (p) { if (p & 1) ret *= tmp; tmp *= tmp, p >>= 1; } return ret; }
 };
 
 #endif /* _TEMPLATE_MODINT */

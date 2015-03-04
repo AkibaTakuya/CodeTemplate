@@ -51,14 +51,14 @@ using namespace std;
 	#define rop		rbegin()
 	#define red		rend()
 	#define rtp(x)	__typeof((x).rop)
-#define inf(x)		push_front(x)
-#define inb(x)		push_back(x)
-#define def()		pop_front()
-#define deb()		pop_back()
-#define inc(x)		insert(x)
-#define dec(x)		erase(x)
-#define lb(x)		lower_bound(x)
-#define ub(x)		upper_bound(x)
+#define inf			push_front
+#define inb			push_back
+#define def			pop_front
+#define deb			pop_back
+#define inc			insert
+#define dec			erase
+#define lb			lower_bound
+#define ub			upper_bound
 //@ Binary Tree Quickly Func
 #define l(x)		((x)<<1)
 #define	r(x)		((x)<<1|1)

@@ -24,7 +24,7 @@
  *	size() const : const size_t
  *		返回顶点的数量
  *	resize(size_t Sz) : void
- *		定义顶点的数量
+ *		清空图, 重新限定顶点的数量
  *	
  *	元素访问：
  *	operator [] (size_t n) : ForwList<..> &
@@ -45,8 +45,6 @@
  *		添加一条 u 指向 v 权值为 w 带反向弧的有向边
  *	push_back(size_t n) : void
  *		插入 n 个顶点
- *	pop_back(size_t n) : void
- *		删除 n 个顶点
  *	flush(size_t n) : void
  *		清除顶点 n 出发的所有边
  *	flush() : void
@@ -56,9 +54,12 @@
  *
  *	操作符：
  *	Dijkstra(size_t s, _Tp* dist, bool* used = 0) : void
- *		计算源点为 s 时该图的单源最短路，
- *		used 数组表示某个点是否可用，
- *		结果反馈在 dist 数组，0 表示断路。
+ *		计算源点为 s 时该图的单源最短路,
+ *		used 数组表示某个点是否可用,
+ *		结果反馈在 dist 数组，0 表示断路.
+ *	Hungary(int* __used = 0) ： int
+ *		计算二分图中最大匹配数,
+ *		used 数组表示某个点的匹配者为谁.
  *
  */
 
@@ -113,7 +114,7 @@ public	:
 };
 
 template <typename _Tp>
-class Graph 
+class Graph
 {
 // Name : Graph 有向图
 // Copyright : www.fateud.com
@@ -128,7 +129,7 @@ public	:
 	typedef _Node &					reference;
 
 // 成员变量：
-private	: 
+private	:
 	vector<pointer> _data;
 
 // 成员函数：
@@ -153,14 +154,12 @@ public	:
 	void
 	resize(size_t __Sz)
 	{
-		if (__Sz > size())
-			push_back(__Sz - size());
-		else if (__Sz < size())
-			pop_back(size() - __Sz);
+		clear();
+		push_back(__Sz);
 	}
 
 // 元素访问：
-public	: 
+public	:
 	inline reference
 	operator [] (size_t __n)
 	{ return *_data[__n]; }
@@ -205,10 +204,6 @@ public	:
 	void
 	push_back(size_t __n)
 	{ REP(i, __n) _data.inb(new value_type()); }
-
-	void
-	pop_back(size_t __n)
-	{ REP(i, __n) _data.deb(); }
 
 	void
 	flush(size_t __n)
@@ -260,6 +255,52 @@ public	:
 		if (!__haveused) delete []__used;
 	}
 
+	int
+	Hungary(int* __used = 0)
+	{
+		bool __haveused = !!__used;
+		if (!__haveused) {
+			__used = new int[size()];
+			memset(__used, 0xff, size() * sizeof(int));
+		}
+
+		bool* __vist = new bool[size()];
+		memset(__vist, 0x00, size() * sizeof(bool));
+
+		struct _Hungary_find
+		{
+			_Self* _g;
+			bool* _vist;
+			int* _used;
+
+			explicit
+			_Hungary_find(_Self* __g, bool* __vist, int* __used)
+			: _g(__g), _vist(__vist), _used(__used) { }
+
+			bool
+			operator () (int u) {
+				TRV(i, _g->at(u)) {
+					int v = i->v;
+					if (_vist[v]) continue;
+					_vist[v] = true;
+					if (_used[v] == -1 || (*this)(_used[v])) {
+						_used[u] = v;
+						_used[v] = u;
+						return true;
+					}
+				}
+				return false;
+			}
+		};
+
+		_Hungary_find __find(this, __vist, __used);
+		int __res = 0;
+		REP(i, size()) {
+			memset(__vist, 0x00, size() * sizeof(bool));
+			__res += __find(i);
+		}
+		return __res;
+	}
 };
 
 #endif	/* _TEMPLATE_GRAPH */

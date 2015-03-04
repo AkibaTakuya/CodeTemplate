@@ -36,8 +36,8 @@
 #endif	/* _TEMPLATE_STANDARD */
 
 template <typename _Tp>
-void _SegmTree_init(_Tp& __elem, size_t __n)
-{ __elem = _Tp(); }
+_Tp _SegmTree_init(size_t __n)
+{ return _Tp(); }
 
 template <typename _Tp>
 class SegmTree 
@@ -58,19 +58,20 @@ private	:
 	size_t _max_size;
 	size_t _size;
 	value_type* _data;
-	void (*_func_init)(reference, size_t);
+	value_type (*_func_init)(size_t);
 
 public	:
 
 // 成员函数：
 public	: 
 	explicit
-	SegmTree(size_t _Sz, void (*__func_init)(reference, size_t) = _SegmTree_init<value_type>)
+	SegmTree(size_t _Sz, value_type (*__func_init)(size_t) = _SegmTree_init<value_type>)
 	: _max_size(), _size(_Sz), _data(),
 	  _func_init(__func_init)
 	{
-		for (_max_size = 1; _max_size < _size; _max_size <<= 1); _max_size <<= 1;
-		_data = new value_type[_max_size];
+		for (_max_size = 1; _max_size <= _size; _max_size <<= 1);
+		_data = new value_type[_max_size << 1];
+//		cout << _size << ' ' << _max_size << endl;
 	}
 
 	~SegmTree()
@@ -113,53 +114,49 @@ private	:
 
 private	:
 	void
-	_build(size_t __id, size_t l, size_t r)
+	_build()
 	{
-//		printf("id = %d, l = %d, r = %d\n", __id, l, r);
-		if (l == r) { _func_init(_data[__id], l); return; }
-		size_t mid = (l + r) >> 1;
-		_build(lson(__id));
-		_build(rson(__id));
-		_push_up(__id);
+		_data[_max_size] = value_type();
+		FOR(__i, _max_size - 1, 1)
+			_data[__i + _max_size] = (__i > _size) ? value_type() : _func_init(__i);
+		FOR(__i, _max_size - 1, 1) _push_up(__i);
 	}
 
 	value_type
-	_get(size_t __s, size_t __t, size_t __id, size_t l, size_t r)
+	_get(size_t __s, size_t __t)
 	{
-		if (__t < l || __s > r) return value_type();
-		if (__s <= l && r <= __t) return _data[__id];
-		size_t mid = (l + r) >> 1;
-		value_type __x = _get(__s, __t, lson(__id));
-		value_type __y = _get(__s, __t, rson(__id));
-		return __x + __y;
+		value_type ret;
+		for (
+		  __s = __s + _max_size - 1,
+		  __t = __t + _max_size + 1;
+		  __s ^ __t ^ 1;
+		  __s >>= 1,
+		  __t >>= 1)
+		{
+			if (~__s & 1) ret = ret + _data[__s ^ 1];
+			if ( __t & 1) ret = ret + _data[__t ^ 1];
+		}
+		return ret;
 	}
 
 	void
-	_set(size_t __s, size_t __t, value_type __w, size_t __id, size_t l, size_t r)
+	_set(size_t __s, size_t __t, value_type __w)
 	{
-		if (__t < l || __s > r) return;
-		if (__s <= l && r <= __t) {
-			_data[__id] = _data[__id] + __w;
-			return;
-		}
-		size_t mid = (l + r) >> 1;
-		_set(__s, __t, __w, lson(__id));
-		_set(__s, __t, __w, rson(__id));
-		_push_up(__id);
+
 	}
 
 public	:
 	void
 	build()
-	{ _build(1, 1, _size); }
+	{ _build(); }
 
 	value_type
 	get(size_t __s, size_t __t)
-	{ return __s > __t ? value_type() : _get(__s, __t, 1, 1, _size); }
+	{ return __s > __t ? value_type() : _get(__s, __t); }
 
 	void
 	set(size_t __s, size_t __t, value_type __w)
-	{ if (__t < __s) return; _set(__s, __t, __w, 1, 1, _size); }
+	{ if (__s > __t) return; _set(__s, __t, __w); }
 
 // 运算符重载：
 public	: 
